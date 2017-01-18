@@ -43,7 +43,7 @@ def lambda_handler(event, context):
                 route(sub_handler, log_group, event)
         
 def route(handler, event):
-    logger.info("would be invoking {} here but mocked for now".format(handler))
+    logger.info("would invoke {} here but mocked for now".format(handler))
     return
     lambda_client.invoke(
         FunctionName=route,
