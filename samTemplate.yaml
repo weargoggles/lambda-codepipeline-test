@@ -15,28 +15,19 @@ Resources:
       FunctionName:
         Ref: LogRouter
       Principal: logs.eu-west-1.amazonaws.com
-#  ProductionLogRouterSubscription:
-#    Type: AWS::Logs::SubscriptionFilter
-#    DependsOn: LogRouterCloudWatchPermission
-#    Properties:
-#      DestinationArn:
-#        "Fn::GetAtt": [ LogRouter, Arn ]
-#      FilterPattern: "{ $.ident = \"dabapps-firefly-glow-*worker\" }"
-#      LogGroupName: dabapps-production
-#  StagingLogRouterSubscription:
-#    Type: AWS::Logs::SubscriptionFilter
-#    DependsOn: LogRouterCloudWatchPermission
-#    Properties:
-#      DestinationArn:
-#        "Fn::GetAtt": [ LogRouter, Arn ]
-#      FilterPattern: "{ $.ident = \"dabapps-firefly-glow-*worker\" }"
-#      LogGroupName: dabapps-staging
-  TestLogRouterSubscription:
+  ProductionLogRouterSubscription:
     Type: AWS::Logs::SubscriptionFilter
     DependsOn: LogRouterCloudWatchPermission
     Properties:
       DestinationArn:
         "Fn::GetAtt": [ LogRouter, Arn ]
-      FilterPattern: "event"
-      LogGroupName: /aws/lambda/glow-sync-event-metrics-adaptor
-   
+      FilterPattern: "{ $.ident = \"dabapps-firefly-glow-*worker\" }"
+      LogGroupName: dabapps-production
+  StagingLogRouterSubscription:
+    Type: AWS::Logs::SubscriptionFilter
+    DependsOn: LogRouterCloudWatchPermission
+    Properties:
+      DestinationArn:
+        "Fn::GetAtt": [ LogRouter, Arn ]
+      FilterPattern: "{ $.ident = \"dabapps-firefly-glow-*worker\" }"
+      LogGroupName: dabapps-staging

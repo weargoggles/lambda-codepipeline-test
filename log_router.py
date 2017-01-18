@@ -12,7 +12,7 @@ logger.setLevel(logging.INFO)
 lambda_client = boto3.client('lambda')
 
 ROUTES = {
-    'foo': '',
+    'glow-sync-event-metrics-adaptor': 'select(.ident | test("dabapps-firefly-glow-.*worker"))',
 }
 
 def decode_event(event):
@@ -38,13 +38,11 @@ def lambda_handler(event, context):
     log_events = event_data['logEvents']
     for event in log_events:
         event['logGroup'] = log_group
-        for log_filter, sub_handler in ROUTES.items():
-            if matches(log_filter, event):                
-                route(sub_handler, log_group, event)
+    for log_filter, sub_handler in ROUTES.items():
+        for event in pyjq.all(log_filter, log_events):
+            route(sub_handler, event)
         
 def route(handler, event):
-    logger.info("would invoke {} here but mocked for now".format(handler))
-    return
     lambda_client.invoke(
         FunctionName=route,
         InvocationType='Event',
