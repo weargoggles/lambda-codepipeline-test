@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Routes log events from cloudwatch logs groups to other lambda functions
+Resources:
+  LogRouter:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: log_router.handler
+      Runtime: python2.7
+      CodeUri: ./
+  LogRouterCloudWatchPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:*"
+      FunctionName:
+        Ref: LogRouter
+      Principal: logs.eu-west-1.amazonaws.com
+#  ProductionLogRouterSubscription:
+#    Type: AWS::Logs::SubscriptionFilter
+#    DependsOn: LogRouterCloudWatchPermission
+#    Properties:
+#      DestinationArn:
+#        "Fn::GetAtt": [ LogRouter, Arn ]
+#      FilterPattern: "{ $.ident = \"dabapps-firefly-glow-*worker\" }"
+#      LogGroupName: dabapps-production
+#  StagingLogRouterSubscription:
+#    Type: AWS::Logs::SubscriptionFilter
+#    DependsOn: LogRouterCloudWatchPermission
+#    Properties:
+#      DestinationArn:
+#        "Fn::GetAtt": [ LogRouter, Arn ]
+#      FilterPattern: "{ $.ident = \"dabapps-firefly-glow-*worker\" }"
+#      LogGroupName: dabapps-staging
+  TestLogRouterSubscription:
+    Type: AWS::Logs::SubscriptionFilter
+    DependsOn: LogRouterCloudWatchPermission
+    Properties:
+      DestinationArn:
+        "Fn::GetAtt": [ LogRouter, Arn ]
+      FilterPattern: "event"
+      LogGroupName: /aws/lambda/glow-sync-event-metrics-adaptor
+   
