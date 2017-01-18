@@ -1,8 +1,11 @@
 version: 0.1
 phases:
-  install:
+  build:
     commands:
       - pip install pyjq -t $(pwd)
+      - python log_router.py
+  post_build:
+    commands:
       - aws cloudformation package --template-file samTemplate.yaml --s3-bucket lambda-codepipeline-test
                                    --output-template-file NewSamTemplate.yaml
 artifacts:
