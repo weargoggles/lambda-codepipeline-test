@@ -5,7 +5,7 @@ Resources:
   LogRouter:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: log_router.handler
+      Handler: log_router.lambda_handler
       Runtime: python2.7
       CodeUri: ./
   LogRouterCloudWatchPermission:
