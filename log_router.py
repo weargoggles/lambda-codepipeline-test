@@ -38,7 +38,7 @@ def lambda_handler(event, context):
     log_events = event_data['logEvents']
     for event in log_events:
         event['logGroup'] = log_group
-    for log_filter, sub_handler in ROUTES.items():
+    for sub_handler, log_filter in ROUTES.items():
         for event in pyjq.all(log_filter, log_events):
             route(sub_handler, event)
         
